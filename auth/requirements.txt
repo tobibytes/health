@@ -1,0 +1,11 @@
+asyncpg
+fastapi
+fastapi-users[all]
+httpx
+python-multipart
+sqlalchemy
+uvicorn
+python-dotenv
+bcrypt
+python-jose
+pydantic
