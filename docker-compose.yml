@@ -1,0 +1,30 @@
+services:
+    db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: postgres
+    ports:
+        - "5432:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+    networks:
+        - my_network
+
+    auth:
+        build: ./auth
+        container_name: auth
+        environment:
+            DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+            JWT_SECRET: your_jwt_secret
+            SECRET_KEY: your_secret_key
+            ALGORITHM: HS256
+        networks:
+            - my_network
+
+        depends_on:
+            - db
+        ports:
+            - "8000:8000"

@@ -37,7 +37,7 @@ class Database:
             """)
 
 
-    async def create_patient(self, patient_payload: types.PatientCreate) -> dict:
+    async def create_patient(self, patient_payload: types.PatientCreate) -> types.PatientBase:
         async with self.pool.acquire() as connection:
             query = """
             INSERT INTO patients (email, fullName, phoneNumber, dateOfBirth, gender, existingConditions, insuranceProvider, allergies, address, password, role)

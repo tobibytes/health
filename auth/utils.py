@@ -1,7 +1,6 @@
 import bcrypt
 import jwt
 from datetime import datetime, timedelta
-from typing import Optional
 
 def generate_token(user_info: dict) -> str:
     """Generate a JWT token for the user."""
