@@ -1,36 +1,34 @@
 export interface Appointment {
-  id: string;
-  date: string; // ISO string
-  doctor: string;
-  type: string;
-  status: 'scheduled' | 'completed' | 'cancelled';
-  notes?: string;
+  id: number
+  patientId: number
+  date: string
+  professionalId: number
+  reason: string
+  type: string
+  status: 'scheduled' | 'completed' | 'cancelled'
+  notes: string
 }
+
 
 export const mockAppointments: Appointment[] = [
   {
-    id: '1',
-    date: '2024-06-10T10:00:00',
-    doctor: 'Dr. Adebayo',
-    type: 'General Checkup',
-    status: 'scheduled',
-    notes: 'Bring previous reports.',
+    id: 1,
+    patientId: 1,
+    date: "2023-10-01T10:00:00Z",
+    professionalId: 101,
+    reason: "General Checkup",
+    type: "In-Person",
+    status: "scheduled",
+    notes: "Patient is feeling well.",
   },
   {
-    id: '2',
-    date: '2024-06-12T14:30:00',
-    doctor: 'Dr. Okonkwo',
-    type: 'Dental',
-    status: 'completed',
-    notes: 'Routine cleaning.',
+    id: 2,
+    patientId: 1,
+    date: "2023-10-02T14:00:00Z",
+    professionalId: 102,
+    reason: "Follow-up",
+    type: "Telehealth",
+    status: "completed",
+    notes: "Follow-up on previous appointment.",
   },
-  {
-    id: '3',
-    date: '2024-06-15T09:00:00',
-    doctor: 'Dr. Musa',
-    type: 'Eye Check',
-    status: 'cancelled',
-    notes: 'Patient cancelled.',
-  },
-  // ...add more for demo
-];
+]

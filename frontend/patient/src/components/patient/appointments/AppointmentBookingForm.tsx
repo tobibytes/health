@@ -5,16 +5,18 @@ import { Input } from "@/components/ui/input";
 
 interface AppointmentBookingFormProps {
   newAppointment: {
+    patientId: number;
+    professionalId: number;
     date: string;
-    doctor: string;
-    type: string;
     notes: string;
+    reason: string 
   };
-  setNewAppointment: (a: {
+  setNewAppointment: (appointment: {
+    patientId: number;
+    professionalId: number;
     date: string;
-    doctor: string;
-    type: string;
     notes: string;
+    reason: string
   }) => void;
   onBook: () => void;
   onCancel: () => void;
@@ -42,19 +44,19 @@ export function AppointmentBookingForm({
         <div>
           <label className="block text-sm font-medium text-gray-700">Doctor</label>
           <Input
-            type="text"
-            value={newAppointment.doctor}
-            onChange={(e) => setNewAppointment({ ...newAppointment, doctor: e.target.value })}
+            type="number"
+            value={newAppointment.professionalId}
+            onChange={(e) => setNewAppointment({ ...newAppointment, professionalId: Number(e.target.value) })}
             className="mt-1"
             placeholder="Dr. Name"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Type</label>
+          <label className="block text-sm font-medium text-gray-700">Reason</label>
           <Input
             type="text"
-            value={newAppointment.type}
-            onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })}
+            value={newAppointment.reason}
+            onChange={(e) => setNewAppointment({ ...newAppointment, reason: e.target.value })}
             className="mt-1"
             placeholder="e.g., General Checkup"
           />

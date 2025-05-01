@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -5,6 +6,7 @@ import PasswordInput from "./PasswordInput";
 import { useAuthStore } from "../../lib/store/authSlice";
 import { Toaster } from "../ui/sonner";
 import { toast as toastSonner } from "sonner";
+import { useRouter } from "next/navigation";
 // If using ShadCN UI's useToast:
 let useToast = () => ({
   toast: ({ title, description }: { title: string; description: string }) =>
@@ -14,6 +16,8 @@ let useToast = () => ({
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const SignInForm: React.FC = () => {
+  const router = useRouter(); // Assuming you're using Next.js or similar
+
   const { login } = useAuthStore();
   const { toast } = useToast();
   const [form, setForm] = useState({ email: "", password: "", remember: false });
@@ -45,6 +49,7 @@ export const SignInForm: React.FC = () => {
     try {
       const result = await login(form.email, form.password);
       toast({ title: "Signed in!", description: "Welcome back.",});
+      router.push("/appointments"); // Redirect to appointments page
       // Redirect logic here (e.g., router.push("/dashboard"))
     } catch (err: any) {
       toast({ title: "Sign in failed", description: err.message || "Invalid credentials", });

@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Input } from '@/components/ui/input'
+import { Appointment, AppointmentPayload, AppointmentPayloadResponse, AppointmentSlice } from './store/appointmentSlice'
+import { getPatientAppointments as getPatientAppointmentsApi, createAppointment as createAppointmentApi } from './appointmentApi'
+
 
 interface UserState {
   user: {
@@ -12,18 +14,7 @@ interface UserState {
   clearUser: () => void
 }
 
-interface AppointmentsState {
-  appointments: Array<{
-    id: string
-    date: string
-    doctor: string
-    type: string
-    status: 'scheduled' | 'completed' | 'cancelled'
-  }>
-  selectedAppointment: string | null
-  setAppointments: (appointments: AppointmentsState['appointments']) => void
-  setSelectedAppointment: (id: string | null) => void
-}
+
 
 interface UIState {
   theme: 'light' | 'dark'
@@ -45,11 +36,49 @@ export const useUserStore = create<UserState>()(
   )
 )
 
-export const useAppointmentsStore = create<AppointmentsState>()((set) => ({
+
+export const useAppointmentStore = create<AppointmentSlice>((set) => ({
   appointments: [],
-  selectedAppointment: null,
-  setAppointments: (appointments) => set({ appointments }),
-  setSelectedAppointment: (id) => set({ selectedAppointment: id }),
+  createdAppointment: null,
+  error: null,
+  getPatientAppointments: async (patient_id: number, token: string, skip: number = 0, limit: number = 10,) => {
+    try {
+      const response = await getPatientAppointmentsApi(patient_id, token || '', skip, limit, )
+      if ('error' in response ) {
+        set({ error: response.error });
+        return [];
+      } 
+      else if ('detail' in response) {
+        set({ error: response.detail})
+        return [];
+      }
+      else {
+        set((state) => ({
+          appointments: [...state.appointments, ...response],
+        }));
+        return response;
+      }
+    } catch (error) {
+      set({ error: (error as Error).message });
+      return [];
+    }
+  },
+  createAppointment: async (payload: AppointmentPayload, token: string): Promise<AppointmentPayloadResponse> => {
+    try {
+      const response = await createAppointmentApi(payload, token);
+      if ('error' in response) {
+        set({ error: response.error });
+        throw new Error(response.error);
+      } else {
+        set({ createdAppointment: response });
+        return response;
+      }
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      set({ error: errorMessage });
+      throw new Error(errorMessage);
+    }
+  },
 }))
 
 export const useUIStore = create<UIState>()(

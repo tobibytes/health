@@ -1,0 +1,1 @@
+from appointment.main import appointment_router

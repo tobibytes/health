@@ -1,35 +1,37 @@
-import { create } from 'zustand'
 
-interface Appointment {
-  id: string
+export interface Appointment {
+  id: number
+  patientId: number
   date: string
-  doctor: string
+  professionalId: number
+  reason: string
   type: string
   status: 'scheduled' | 'completed' | 'cancelled'
-  notes?: string
+  notes: string
 }
 
-export interface AppointmentState {
+
+export interface AppointmentPayload {
+  patientId: number;
+  professionalId: number;
+  date: string;
+  notes: string;
+  reason: string
+}
+export interface AppointmentPayloadResponse {
+  id: string;
+  patientId: number;
+  professionalId: number;
+  date: string;
+  status: 'scheduled' | 'completed' | 'cancelled';
+  notes?: string | null;
+  reason?: string | null;
+}
+
+export interface AppointmentSlice {
   appointments: Appointment[]
-  selectedAppointment: Appointment | null
-  setAppointments: (appointments: Appointment[]) => void
-  setSelectedAppointment: (appointment: Appointment | null) => void
-  updateAppointment: (id: string, data: Partial<Appointment>) => void
+  error: string | null;
+  createdAppointment: AppointmentPayloadResponse | null
+  getPatientAppointments: (patient_id: number, token: string, skip?: number, limit?: number) => Promise<Array<Appointment | { error: string } | { detail: string }>>
+  createAppointment: (payload: AppointmentPayload, token: string) => Promise<AppointmentPayloadResponse | { error: string } | { detail: string }>
 }
-
-export const createAppointmentSlice = (set: any) => ({
-  appointments: [],
-  selectedAppointment: null,
-  setAppointments: (appointments: Appointment[]) => set({ appointments }),
-  setSelectedAppointment: (appointment: Appointment | null) => set({ selectedAppointment: appointment }),
-  updateAppointment: (id: string, data: Partial<Appointment>) =>
-    set((state: AppointmentState) => ({
-      appointments: state.appointments.map((appt) =>
-        appt.id === id ? { ...appt, ...data } : appt
-      ),
-    })),
-})
-
-export const useAppointmentStore = create<AppointmentState>()((set) => ({
-  ...createAppointmentSlice(set),
-})) 

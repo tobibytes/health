@@ -1,11 +1,12 @@
 "use client";
 
-import { Appointment } from "./types";
+
 import { Button } from "@/components/ui/button";
+import { AppointmentPayloadResponse } from "@/lib/store/appointmentSlice";
 import { cn } from "@/lib/utils";
 
 interface AppointmentDetailsModalProps {
-  selectedAppointment: Appointment | null;
+  selectedAppointment: AppointmentPayloadResponse | null;
   onClose: () => void;
 }
 
@@ -46,13 +47,13 @@ export function AppointmentDetailsModal({
           <div>
             <span className="text-xs sm:text-sm text-gray-500">Doctor:</span>
             <span className="ml-2 text-xs sm:text-sm font-medium text-gray-900">
-              {selectedAppointment.doctor}
+              {selectedAppointment.professionalId}
             </span>
           </div>
           <div>
             <span className="text-xs sm:text-sm text-gray-500">Type:</span>
             <span className="ml-2 text-xs sm:text-sm font-medium text-gray-900">
-              {selectedAppointment.type}
+              {selectedAppointment.status}
             </span>
           </div>
           <div>
@@ -81,6 +82,14 @@ export function AppointmentDetailsModal({
               <span className="text-xs sm:text-sm text-gray-500">Notes:</span>
               <span className="ml-2 text-xs sm:text-sm text-gray-900">
                 {selectedAppointment.notes}
+              </span>
+            </div>
+          )}
+          {selectedAppointment.reason && (
+            <div>
+              <span className="text-xs sm:text-sm text-gray-500">Notes:</span>
+              <span className="ml-2 text-xs sm:text-sm text-gray-900">
+                {selectedAppointment.reason}
               </span>
             </div>
           )}

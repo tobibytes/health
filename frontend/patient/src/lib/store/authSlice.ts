@@ -43,8 +43,8 @@ export const useAuthStore = create<AuthSlice>((set) => ({
   user: null,
   token: null,
   isAuthenticated: false,
+  error: null,
   login: async (email: string, password: string) => {
-    // Placeholder: Replace with real API call
     const response = await loginApi(email, password);
     if ('token' in response) {
       set({ token: response.token, isAuthenticated: true });

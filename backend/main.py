@@ -2,13 +2,28 @@ from fastapi import FastAPI
 from common.db import Database
 from fastapi.middleware.cors import CORSMiddleware
 from auth import auth_router
+from appointment import appointment_router
+import time
 from dotenv import load_dotenv
-
-
-
-app = FastAPI()
-
 load_dotenv()
+
+
+
+
+async def lifespan(app: FastAPI):
+    """
+    Startup event to initialize the database connection.
+    """
+    time.sleep(3)
+    db = Database()
+    await db.init_db()
+    yield
+    await db.disconnect()
+
+
+
+app = FastAPI(lifespan=lifespan)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,16 +33,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.on_event("startup")
-async def startup_event():
-    """
-    Startup event to initialize the database connection.
-    """
-    db = Database()
-    await db.init_db()
-
-
 @app.get("/")
 async def root():
     """
@@ -36,3 +41,4 @@ async def root():
     return {"message": "Hello World"}
 
 app.include_router(auth_router)
+app.include_router(appointment_router)

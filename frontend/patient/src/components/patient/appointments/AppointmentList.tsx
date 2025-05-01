@@ -1,9 +1,10 @@
 "use client";
 
-import { useAppointmentStore } from "@/lib/store/appointmentSlice";
-import { Appointment } from "./types";
+
 import { Tooltip } from "@/components/ui/tooltip";
+import { useAppointmentStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { Appointment } from "./types";
 
 interface AppointmentListProps {
   appointments?: Appointment[]; // Optional, for filtered lists
@@ -16,7 +17,7 @@ export function AppointmentList({
   isPremium,
   setShowPricing,
 }: AppointmentListProps) {
-  const { appointments: storeAppointments, setSelectedAppointment } = useAppointmentStore();
+  const { appointments: storeAppointments } = useAppointmentStore();
   const list = appointments ?? storeAppointments;
 
   return (
@@ -32,9 +33,10 @@ export function AppointmentList({
             key={appointment.id}
             className="hover:bg-gray-50 cursor-pointer"
             onClick={() =>
-              isPremium
-                ? setSelectedAppointment(appointment)
-                : setShowPricing(true)
+              // isPremium
+                // ? setSelectedAppointment(appointment)
+                // : 
+                setShowPricing(true)
             }
           >
             <Tooltip
@@ -47,9 +49,15 @@ export function AppointmentList({
               <div className="px-2 py-3 sm:px-4 sm:py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <div>
                   <p className="text-sm font-medium text-teal-600 truncate">
-                    {appointment.doctor}
+                    {appointment.professionalId}
                   </p>
-                  <p className="text-xs text-gray-500">{appointment.type}</p>
+                  <p className="text-xs text-gray-500">{appointment.status}</p>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-900 truncate">
+                    {appointment.reason}
+                  </p>
+                  <p className="text-xs text-gray-500">{appointment.notes}</p>
                 </div>
                 <div className="flex flex-col items-end">
                   <span

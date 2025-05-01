@@ -7,30 +7,27 @@ import { AppointmentList } from "@/components/patient/appointments/AppointmentLi
 import { AppointmentBookingForm } from "@/components/patient/appointments/AppointmentBookingForm";
 import { PricingModal } from "@/components/patient/appointments/PricingModal";
 import { AppointmentDetailsModal } from "@/components/patient/appointments/AppointmentDetailsModal";
-import { Appointment, mockAppointments } from "@/components/patient/appointments/types";
-import { useAppointmentStore } from "@/lib/store/appointmentSlice";
+import { useAppointmentStore } from "@/lib/store";
+import { useAuthStore } from "@/lib/store/authSlice";
+import { AppointmentPayload } from "@/lib/store/appointmentSlice";
+
 
 export default function AppointmentsPage() {
-  const {
-    appointments,
-    setAppointments,
-    selectedAppointment,
-    setSelectedAppointment,
-  } = useAppointmentStore();
+  const { appointments, createAppointment, createdAppointment, getPatientAppointments, error, } = useAppointmentStore()
+  const { token } = useAuthStore()
+  const [showCreatedAppointment, setShowCreatedAppointment] = useState(false);
 
-  // Local state for UI controls
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showBookingForm, setShowBookingForm] = useState(false);
-  const [newAppointment, setNewAppointment] = useState({ date: "", doctor: "", type: "", notes: "" });
+  const [newAppointment, setNewAppointment] = useState<AppointmentPayload>({patientId: 1, professionalId: 1, date: '', notes: '', reason: ''});
   const [filter, setFilter] = useState("all");
   const [isPremium, setIsPremium] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
 
   // Initialize store with mockAppointments on first load
   useEffect(() => {
-    if (appointments.length === 0) {
-      setAppointments(mockAppointments);
-    }
+    getPatientAppointments(1, token || '', 0, 10)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -42,18 +39,28 @@ export default function AppointmentsPage() {
   });
 
   const handleBookAppointment = () => {
-    if (!newAppointment.date || !newAppointment.doctor || !newAppointment.type) return;
-    const appointment: Appointment = {
-      id: Date.now().toString(),
+    if (!newAppointment) return;
+    const appointmentData = {
+      patientId: 1,
+      professionalId: 1,
       date: newAppointment.date,
-      doctor: newAppointment.doctor,
-      type: newAppointment.type,
-      status: "scheduled",
       notes: newAppointment.notes,
-    };
-    setAppointments([...appointments, appointment]);
-    setShowBookingForm(false);
-    setNewAppointment({ date: "", doctor: "", type: "", notes: "" });
+      reason: newAppointment.reason,
+    }; 
+    createAppointment(appointmentData, token || '')
+      .then((response) => {
+        if (response) {
+          setShowBookingForm(false);
+          setShowCreatedAppointment(true);
+          
+        } else {
+          console.error("Error creating appointment:", error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating appointment:", error);
+      })
+
   };
 
   return (
@@ -95,6 +102,10 @@ export default function AppointmentsPage() {
                 onCancel={() => setShowBookingForm(false)}
               />
             )}
+            {error && (
+              <div className="bg-red-100 text-red-800 p-4 rounded-md mb-4">
+                <p className="text-sm">{error}</p>
+                </div>)}
             <AppointmentList
               appointments={filteredAppointments}
               isPremium={isPremium}
@@ -102,10 +113,13 @@ export default function AppointmentsPage() {
             />
           </div>
         </div>
-        <AppointmentDetailsModal
-          selectedAppointment={isPremium ? selectedAppointment : null}
-          onClose={() => setSelectedAppointment(null)}
-        />
+        { (createdAppointment && showCreatedAppointment) && (
+          <AppointmentDetailsModal
+            selectedAppointment={ createdAppointment ? createdAppointment  : null}
+            onClose={() => setShowCreatedAppointment(false)}
+          />
+
+        )}
       </div>
     </MainLayout>
   );

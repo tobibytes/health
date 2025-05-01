@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from common.db import Database
 from common.types import *
-from auth.utils import generate_token, verify_hash, hash_password
+from common.utils.auth import generate_token, verify_hash, hash_password
 
 db = Database()
-print('pool', db.pool)
+
 auth_router = APIRouter(prefix="/auth")
 
 @auth_router.post("/login")
