@@ -1,0 +1,9 @@
+asyncpg
+fastapi
+uvicorn
+pydantic
+pydantic[email]
+bcrypt
+python-dotenv
+python-jose
+PyJWT
