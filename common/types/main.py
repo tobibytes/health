@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, Union, List
+from typing import Optional, List
 from datetime import datetime
 from enum import Enum
 
@@ -16,17 +16,19 @@ class PatientStatus(str, Enum):
     DELETED = "deleted"
 
 class PatientBase(BaseModel):
-    id: Optional[str] = Field(None, example="12345")
+    id: Optional[int] = Field(None, example=1)
     email: EmailStr = Field(..., example="test@gmail.com")
     role: UserRole = Field(..., example=UserRole.PATIENT)
     status: PatientStatus = Field(..., example=PatientStatus.ACTIVE)
+    password: Optional[str] = Field(None, example="password123")
+
 class PatientLoginPayload(BaseModel):
     email: EmailStr = Field(..., example="test@gmail.com")
     password: str = Field(..., min_length=8, example="password123")
-    role: UserRole = Field(..., example=UserRole.PATIENT)
+    role: Optional[UserRole] = Field(..., example=UserRole.PATIENT)
     
 
-class PatientCreate(PatientBase):
+class PatientCreate(BaseModel):
     fullName: str = Field(..., example="John Doe")
     email: EmailStr = Field(..., example="test@gmail.com")
     phoneNumber: Optional[str] = Field(None, example="+1234567890")
@@ -34,11 +36,10 @@ class PatientCreate(PatientBase):
     gender: Optional[str] = Field(None, example="male")
     existingConditions: List[Optional[str]] = Field(None, example=["Diabetes", "Hypertension"])
     insuranceProvider: Optional[str] = Field(None, example="Health Insurance Co.")
-    allergies: List[Optional[str]] = Field(None, example=["Penicillin"])
+    allergies: Optional[str] = Field(None, example="Penicillin")
     address: Optional[str] = Field(None, example="123 Main St, City, Country")
     password: str = Field(..., min_length=8, example="password123")
-    role = UserRole.PATIENT
+    role : UserRole = Field(default= UserRole.PATIENT)
 
 class LoginResponse(BaseModel):
-    # user : PatientBase = Field(..., example=PatientBase)
     token: str = Field(..., example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")

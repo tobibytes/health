@@ -1,0 +1,1 @@
+from auth.main import auth_router
