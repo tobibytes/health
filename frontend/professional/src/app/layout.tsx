@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
-import { WebSocketProvider } from "@/lib/WebSocketContext";
+
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,15 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={``}
       >
-        <ThemeProvider>
-          <WebSocketProvider url="ws://localhost:8000/ws">
-
-        
         {children}
-          </WebSocketProvider>
-        </ThemeProvider>
       </body>
     </html>
   );
