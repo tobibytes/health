@@ -1,9 +1,13 @@
 "use client";
 import React, { useState } from 'react';
 import { ChatMessage } from './ChatMessage';
-
+interface Message {
+  id: number;
+  sender: 'user' | 'assistant';
+  content: string;
+}
 export function ChatPanel() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: 'user', content: 'Hello, how can I help you?' },
     { id: 2, sender: 'assistant', content: 'I need assistance with my medication.' },
   ]);
@@ -11,7 +15,7 @@ export function ChatPanel() {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    const newMessage = { id: Date.now(), sender: 'user', content: input };
+    const newMessage : Message = { id: Date.now(), sender: 'user', content: input };
     setMessages([...messages, newMessage]);
     setInput('');
   };

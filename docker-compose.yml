@@ -39,6 +39,16 @@ services:
             - "3000:3000"
         depends_on:
             - main
+    professional:
+        build: ./frontend/professional
+        container_name: professional
+        networks:
+            - my_network
+        
+        ports:
+            - "3001:3001"
+        depends_on:
+            - main
 
 networks:
     my_network:
