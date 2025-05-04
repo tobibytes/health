@@ -9,13 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.0",
-    "class-variance-authority": "^0.7.1",
+    "axios": "^1.4.0",
+    "class-variance-authority": "^0.7.1s",
     "clsx": "^2.1.1",
+    "date-fns": "^2.30.0",
     "framer-motion": "^10.12.16",
     "lucide-react": "^0.503.0",
-    "axios": "^1.4.0",
-    "date-fns": "^2.30.0",
     "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

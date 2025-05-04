@@ -3,6 +3,7 @@ fastapi
 uvicorn
 pydantic
 pydantic[email]
+uvicorn[standard]
 bcrypt
 python-dotenv
 python-jose

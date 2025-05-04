@@ -1,3 +1,4 @@
+"use client";
 import React, { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
 
 type WebSocketContextType = {
